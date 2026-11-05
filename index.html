@@ -1,1 +1,146 @@
 
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bike Builder</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101318;color:#f4f5f7;font-family:Arial,sans-serif}
+header{padding:25px 7%;border-bottom:1px solid #30343c;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:900;letter-spacing:1px}
+.logo span{color:#a3e635}
+.hero{padding:55px 7% 25px}
+.hero h1{font-size:clamp(35px,6vw,65px);margin:0 0 12px}
+.hero p{color:#a5abb5}
+main{padding:20px 7%;display:grid;grid-template-columns:1.1fr .9fr;gap:25px}
+.panel{background:#191e26;border:1px solid #303744;border-radius:18px;padding:23px}
+h2{margin-top:0}
+label{display:block;margin:18px 0 8px;color:#c7cbd2;font-size:14px}
+select{width:100%;padding:14px;border-radius:9px;border:1px solid #424b58;background:#252c36;color:white;font-size:15px}
+.bike{height:270px;display:flex;align-items:center;justify-content:center}
+.bike svg{width:100%;max-width:430px}
+.wheel{fill:none;stroke:#a3e635;stroke-width:6}
+.frame{fill:none;stroke:#e5e7eb;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.price{font-size:38px;font-weight:bold;color:#a3e635;margin:10px 0}
+.summary{color:#aeb5bf;font-size:14px;line-height:1.9}
+.warning{background:#352b1b;color:#facc15;padding:12px;border-radius:9px;margin-top:15px;font-size:13px}
+button{background:#a3e635;color:#111;padding:14px 20px;border:0;border-radius:9px;font-weight:bold;cursor:pointer;margin-top:15px}
+button:hover{background:#bef264}
+footer{padding:30px 7%;color:#7e8794;text-align:center}
+@media(max-width:750px){main{grid-template-columns:1fr}.hero{padding-top:35px}header{padding:20px 6%}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">BIKE<span>BUILDER</span></div>
+ <div style="color:#a3e635;font-size:13px">CUSTOM BIKE CONFIGURATOR</div>
+</header>
+<section class="hero">
+ <h1>BUILD YOUR <span style="color:#a3e635">RIDE.</span></h1>
+ <p>Design your dream bicycle. Choose your parts. Create your build.</p>
+</section>
+<main>
+<section class="panel">
+ <h2>Choose your components</h2>
+ <label for="frame">Frame</label>
+ <select id="frame" onchange="update()">
+  <option value="5000">Aluminium frame – 5 000 kr</option>
+  <option value="9000">Carbon frame – 9 000 kr</option>
+  <option value="3500">Steel frame – 3 500 kr</option>
+ </select>
+ <label for="fork">Fork</label>
+ <select id="fork" onchange="update()">
+  <option value="2000">Aluminium fork – 2 000 kr</option>
+  <option value="4500">Carbon fork – 4 500 kr</option>
+  <option value="1500">Steel fork – 1 500 kr</option>
+ </select>
+ <label for="wheels">Wheels</label>
+ <select id="wheels" onchange="update()">
+  <option value="3000">Alloy wheels – 3 000 kr</option>
+  <option value="6500">Carbon wheels – 6 500 kr</option>
+  <option value="1800">Basic wheels – 1 800 kr</option>
+ </select>
+ <label for="tires">Tires</label>
+ <select id="tires" onchange="update()">
+  <option value="800">Road tires – 800 kr</option>
+  <option value="1200">Gravel tires – 1 200 kr</option>
+  <option value="1000">Mountain tires – 1 000 kr</option>
+ </select>
+ <label for="handlebar">Handlebar</label>
+ <select id="handlebar" onchange="update()">
+  <option value="900">Drop bar – 900 kr</option>
+  <option value="700">Flat bar – 700 kr</option>
+  <option value="1300">Carbon bar – 1 300 kr</option>
+ </select>
+ <label for="brakes">Brakes</label>
+ <select id="brakes" onchange="update()">
+  <option value="1500">Disc brakes – 1 500 kr</option>
+  <option value="900">Rim brakes – 900 kr</option>
+ </select>
+ <label for="pedals">Pedals</label>
+ <select id="pedals" onchange="update()">
+  <option value="500">Flat pedals – 500 kr</option>
+  <option value="1100">Clipless pedals – 1 100 kr</option>
+ </select>
+</section>
+<section class="panel">
+ <h2>Your bicycle</h2>
+ <div class="bike">
+ <svg viewBox="0 0 430 240" aria-label="Illustration of a bicycle">
+  <circle class="wheel" cx="90" cy="160" r="65"/>
+  <circle class="wheel" cx="340" cy="160" r="65"/>
+  <path class="frame" d="M90 160 L175 160 L145 75 L90 160 M145 75 L235 75 L175 160 M235 75 L340 160 M235 75 L260 160"/>
+  <path class="frame" d="M125 65 L165 65 M220 65 L250 65"/>
+  <circle cx="175" cy="160" r="9" fill="#a3e635"/>
+ </svg>
+ </div>
+ <div style="color:#aeb5bf">TOTAL BUILD PRICE</div>
+ <div class="price" id="total">13 700 kr</div>
+ <h3>Build summary</h3>
+ <div class="summary" id="summary"></div>
+ <div class="warning" id="compatibility">Checking compatibility...</div>
+ <button onclick="shareBuild()">Share my build ↗</button>
+ <button onclick="resetBuild()" style="background:#303744;color:white;margin-left:5px">Reset</button>
+</section>
+</main>
+<footer>BIKE BUILDER · Create your own ride.</footer>
+<script>
+const ids=["frame","fork","wheels","tires","handlebar","brakes","pedals"];
+const names=["Frame","Fork","Wheels","Tires","Handlebar","Brakes","Pedals"];
+function money(n){return n.toLocaleString("sv-SE")+" kr"}
+function update(){
+ let total=0,lines=[];
+ ids.forEach((id,i)=>{
+  let el=document.getElementById(id);
+  total+=Number(el.value);
+  lines.push(names[i]+": "+el.options[el.selectedIndex].text);
+ });
+ document.getElementById("total").textContent=money(total);
+ document.getElementById("summary").innerHTML=lines.map(x=>"<div>"+x+"</div>").join("");
+ let frame=document.getElementById("frame").value;
+ let fork=document.getElementById("fork").value;
+ let message="Demo compatibility check: verify real frame, fork, wheel and brake standards before buying.";
+ if(frame==="9000"&&fork==="1500")message="⚠️ Carbon frame with steel fork: check the actual frame's fork standard.";
+ else message="✓ No demo warnings. Always verify real component standards before purchasing.";
+ document.getElementById("compatibility").textContent=message;
+}
+function shareBuild(){
+ let data={};
+ ids.forEach(id=>data[id]=document.getElementById(id).value);
+ let url=new URL(location.href);
+ url.hash=new URLSearchParams(data).toString();
+ if(navigator.share)navigator.share({title:"My Bike Builder",url:url.href});
+ else if(navigator.clipboard)navigator.clipboard.writeText(url.href).then(()=>alert("Build link copied!"));
+ else alert(url.href);
+}
+function resetBuild(){
+ ids.forEach(id=>document.getElementById(id).selectedIndex=0);
+ update();
+}
+update();
+</script>
+</body>
+</html>
+
