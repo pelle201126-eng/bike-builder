@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -6,141 +5,386 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bike Builder</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#101318;color:#f4f5f7;font-family:Arial,sans-serif}
-header{padding:25px 7%;border-bottom:1px solid #30343c;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:25px;font-weight:900;letter-spacing:1px}
-.logo span{color:#a3e635}
-.hero{padding:55px 7% 25px}
-.hero h1{font-size:clamp(35px,6vw,65px);margin:0 0 12px}
-.hero p{color:#a5abb5}
-main{padding:20px 7%;display:grid;grid-template-columns:1.1fr .9fr;gap:25px}
-.panel{background:#191e26;border:1px solid #303744;border-radius:18px;padding:23px}
-h2{margin-top:0}
-label{display:block;margin:18px 0 8px;color:#c7cbd2;font-size:14px}
-select{width:100%;padding:14px;border-radius:9px;border:1px solid #424b58;background:#252c36;color:white;font-size:15px}
-.bike{height:270px;display:flex;align-items:center;justify-content:center}
-.bike svg{width:100%;max-width:430px}
-.wheel{fill:none;stroke:#a3e635;stroke-width:6}
-.frame{fill:none;stroke:#e5e7eb;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
-.price{font-size:38px;font-weight:bold;color:#a3e635;margin:10px 0}
-.summary{color:#aeb5bf;font-size:14px;line-height:1.9}
-.warning{background:#352b1b;color:#facc15;padding:12px;border-radius:9px;margin-top:15px;font-size:13px}
-button{background:#a3e635;color:#111;padding:14px 20px;border:0;border-radius:9px;font-weight:bold;cursor:pointer;margin-top:15px}
-button:hover{background:#bef264}
-footer{padding:30px 7%;color:#7e8794;text-align:center}
-@media(max-width:750px){main{grid-template-columns:1fr}.hero{padding-top:35px}header{padding:20px 6%}}
+:root {
+  --bg:#101411; --panel:#1b231e; --line:#344239;
+  --green:#a6ed70; --text:#f3f5f2; --muted:#aab5ac;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,sans-serif;
+}
+header {
+  padding:26px 6%;border-bottom:1px solid var(--line);
+}
+.logo {font-size:26px;font-weight:900;letter-spacing:2px}
+.logo span {color:var(--green)}
+main {max-width:1100px;margin:35px auto;padding:0 18px}
+h1 {font-size:34px;margin-bottom:8px}
+p {color:var(--muted);line-height:1.5}
+.layout {display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+.panel {
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:15px;padding:20px;margin-bottom:18px;
+}
+h2 {font-size:19px;margin-top:0}
+label {display:block;color:var(--muted);margin:12px 0 6px}
+select,input {
+  width:100%;padding:12px;border-radius:8px;
+  background:#101713;color:white;border:1px solid var(--line);
+}
+.product {
+  padding:14px;border:1px solid var(--line);
+  border-radius:10px;margin:10px 0;
+}
+.product strong {display:block;margin-bottom:7px}
+.price {color:var(--green);font-weight:bold;font-size:19px}
+.small {font-size:12px;color:var(--muted)}
+button {
+  background:var(--green);color:#142012;border:0;
+  border-radius:8px;padding:11px 15px;font-weight:bold;
+  cursor:pointer;margin-top:10px;
+}
+button.secondary {background:#344239;color:white}
+button:disabled {opacity:.4;cursor:not-allowed}
+.total {font-size:30px;color:var(--green);font-weight:bold}
+.warning {color:#ffc66d}
+.good {color:var(--green)}
+a {color:var(--green)}
+.hidden {display:none}
+@media(max-width:750px) {
+  .layout {grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 <header>
- <div class="logo">BIKE<span>BUILDER</span></div>
- <div style="color:#a3e635;font-size:13px">CUSTOM BIKE CONFIGURATOR</div>
+  <div class="logo">BIKE<span>BUILDER</span></div>
+  <p>Build your dream bike. One compatible part at a time.</p>
 </header>
-<section class="hero">
- <h1>BUILD YOUR <span style="color:#a3e635">RIDE.</span></h1>
- <p>Design your dream bicycle. Choose your parts. Create your build.</p>
-</section>
+
 <main>
-<section class="panel">
- <h2>Choose your components</h2>
- <label for="frame">Frame</label>
- <select id="frame" onchange="update()">
-  <option value="5000">Aluminium frame – 5 000 kr</option>
-  <option value="9000">Carbon frame – 9 000 kr</option>
-  <option value="3500">Steel frame – 3 500 kr</option>
- </select>
- <label for="fork">Fork</label>
- <select id="fork" onchange="update()">
-  <option value="2000">Aluminium fork – 2 000 kr</option>
-  <option value="4500">Carbon fork – 4 500 kr</option>
-  <option value="1500">Steel fork – 1 500 kr</option>
- </select>
- <label for="wheels">Wheels</label>
- <select id="wheels" onchange="update()">
-  <option value="3000">Alloy wheels – 3 000 kr</option>
-  <option value="6500">Carbon wheels – 6 500 kr</option>
-  <option value="1800">Basic wheels – 1 800 kr</option>
- </select>
- <label for="tires">Tires</label>
- <select id="tires" onchange="update()">
-  <option value="800">Road tires – 800 kr</option>
-  <option value="1200">Gravel tires – 1 200 kr</option>
-  <option value="1000">Mountain tires – 1 000 kr</option>
- </select>
- <label for="handlebar">Handlebar</label>
- <select id="handlebar" onchange="update()">
-  <option value="900">Drop bar – 900 kr</option>
-  <option value="700">Flat bar – 700 kr</option>
-  <option value="1300">Carbon bar – 1 300 kr</option>
- </select>
- <label for="brakes">Brakes</label>
- <select id="brakes" onchange="update()">
-  <option value="1500">Disc brakes – 1 500 kr</option>
-  <option value="900">Rim brakes – 900 kr</option>
- </select>
- <label for="pedals">Pedals</label>
- <select id="pedals" onchange="update()">
-  <option value="500">Flat pedals – 500 kr</option>
-  <option value="1100">Clipless pedals – 1 100 kr</option>
- </select>
+<h1>Build your bike.</h1>
+<p>Välj ramen först. Bike Builder filtrerar sedan fram delar
+som matchar de specifikationer vi känner till.</p>
+
+<div class="layout">
+<section>
+  <div class="panel">
+    <h2>01 — Frame</h2>
+    <label>Choose your frame</label>
+    <select id="frameSelect"></select>
+    <div id="frameInfo"></div>
+  </div>
+
+  <div class="panel">
+    <h2>02 — Tires</h2>
+    <p id="tireInfo">Välj en ram först.</p>
+    <div id="tireList"></div>
+  </div>
+
+  <div class="panel">
+    <h2>03 — More components</h2>
+    <p>Fler kategorier kommer att läggas till här.</p>
+    <div class="product">Wheels — Kommer snart</div>
+    <div class="product">Fork — Kommer snart</div>
+    <div class="product">Brakes — Kommer snart</div>
+    <div class="product">Groupset — Kommer snart</div>
+    <div class="product">Crankset — Kommer snart</div>
+  </div>
+
+  <div class="panel">
+    <h2>Add your own product</h2>
+    <label>Product name</label>
+    <input id="customName" placeholder="Example: Shimano wheelset">
+    <label>Category</label>
+    <select id="customCategory">
+      <option value="other">Other</option>
+      <option value="tire">Tire</option>
+      <option value="wheel">Wheel</option>
+      <option value="fork">Fork</option>
+      <option value="brake">Brake</option>
+      <option value="groupset">Groupset</option>
+    </select>
+    <label>Price in SEK</label>
+    <input id="customPrice" type="number" min="0" placeholder="Price">
+    <label>Product link</label>
+    <input id="customUrl" placeholder="https://...">
+    <button onclick="addCustom()">Add product</button>
+    <div id="customList"></div>
+  </div>
 </section>
-<section class="panel">
- <h2>Your bicycle</h2>
- <div class="bike">
- <svg viewBox="0 0 430 240" aria-label="Illustration of a bicycle">
-  <circle class="wheel" cx="90" cy="160" r="65"/>
-  <circle class="wheel" cx="340" cy="160" r="65"/>
-  <path class="frame" d="M90 160 L175 160 L145 75 L90 160 M145 75 L235 75 L175 160 M235 75 L340 160 M235 75 L260 160"/>
-  <path class="frame" d="M125 65 L165 65 M220 65 L250 65"/>
-  <circle cx="175" cy="160" r="9" fill="#a3e635"/>
- </svg>
- </div>
- <div style="color:#aeb5bf">TOTAL BUILD PRICE</div>
- <div class="price" id="total">13 700 kr</div>
- <h3>Build summary</h3>
- <div class="summary" id="summary"></div>
- <div class="warning" id="compatibility">Checking compatibility...</div>
- <button onclick="shareBuild()">Share my build ↗</button>
- <button onclick="resetBuild()" style="background:#303744;color:white;margin-left:5px">Reset</button>
-</section>
+
+<aside>
+  <div class="panel">
+    <h2>Your build</h2>
+    <div id="buildSummary">No parts selected yet.</div>
+    <hr style="border-color:#344239">
+    <p>Total price</p>
+    <div class="total" id="total">0 kr</div>
+    <button class="secondary" onclick="resetBuild()">Reset build</button>
+  </div>
+  <div class="panel">
+    <h2>Compatibility checker</h2>
+    <div id="compatibility">
+      <p>Choose a frame to start checking compatibility.</p>
+    </div>
+    <p class="small">
+      Important: This is an early prototype. Only listed
+      specifications are checked. Unknown standards are not
+      automatically assumed to fit.
+    </p>
+  </div>
+</aside>
+</div>
 </main>
-<footer>BIKE BUILDER · Create your own ride.</footer>
+
 <script>
-const ids=["frame","fork","wheels","tires","handlebar","brakes","pedals"];
-const names=["Frame","Fork","Wheels","Tires","Handlebar","Brakes","Pedals"];
-function money(n){return n.toLocaleString("sv-SE")+" kr"}
-function update(){
- let total=0,lines=[];
- ids.forEach((id,i)=>{
-  let el=document.getElementById(id);
-  total+=Number(el.value);
-  lines.push(names[i]+": "+el.options[el.selectedIndex].text);
- });
- document.getElementById("total").textContent=money(total);
- document.getElementById("summary").innerHTML=lines.map(x=>"<div>"+x+"</div>").join("");
- let frame=document.getElementById("frame").value;
- let fork=document.getElementById("fork").value;
- let message="Demo compatibility check: verify real frame, fork, wheel and brake standards before buying.";
- if(frame==="9000"&&fork==="1500")message="⚠️ Carbon frame with steel fork: check the actual frame's fork standard.";
- else message="✓ No demo warnings. Always verify real component standards before purchasing.";
- document.getElementById("compatibility").textContent=message;
+// PRODUCT DATABASE
+// Add verified specifications as the database grows.
+
+const frames = [
+  {
+    id:"ican-a9",
+    name:"ICAN A9 Carbon Disc Road Frame",
+    price:730,
+    currency:"USD",
+    maxTire:30,
+    wheel:622,
+    brake:"flat-mount",
+    frontAxle:"12x100",
+    rearAxle:"12x142",
+    bottomBracket:"BB86",
+    url:"https://icancycling.com/products/disc-road-bike-frame-a9",
+    source:"ICAN official product page",
+    notes:"Max 30 mm tire; 700C. Frame, fork and listed parts included according to seller specification."
+  }
+];
+
+const tires = [
+  {
+    id:"pirelli-p7",
+    name:"Pirelli P7 Sport 28-622",
+    width:28,
+    wheel:622,
+    price:233,
+    shop:"TCM Cykel",
+    url:"https://www.tcmcykel.se/p/cykeldack/landsvagsdack/pirelli-p7-sport-28-622-black-60-tpi"
+  },
+  {
+    id:"continental-gp5000",
+    name:"Continental Grand Prix 5000 28-622",
+    width:28,
+    wheel:622,
+    price:855,
+    shop:"TCM Cykel",
+    url:"https://www.tcmcykel.se/p/cykeldack/landsvagsdack/continental-grand-prix-5000-700-x-28c-28-622-dack-till-racercykel"
+  }
+];
+
+let selectedFrame = null;
+let selectedTire = null;
+let customProducts = [];
+
+const money = (n,currency="SEK") =>
+  new Intl.NumberFormat("sv-SE", {
+    style:"currency",currency
+  }).format(n);
+
+function init() {
+  const select = document.getElementById("frameSelect");
+  select.innerHTML = '<option value="">Select a frame</option>';
+  frames.forEach(frame => {
+    const option = document.createElement("option");
+    option.value = frame.id;
+    option.textContent = frame.name;
+    select.appendChild(option);
+  });
+  select.addEventListener("change", chooseFrame);
 }
-function shareBuild(){
- let data={};
- ids.forEach(id=>data[id]=document.getElementById(id).value);
- let url=new URL(location.href);
- url.hash=new URLSearchParams(data).toString();
- if(navigator.share)navigator.share({title:"My Bike Builder",url:url.href});
- else if(navigator.clipboard)navigator.clipboard.writeText(url.href).then(()=>alert("Build link copied!"));
- else alert(url.href);
+
+function chooseFrame() {
+  const id = document.getElementById("frameSelect").value;
+  selectedFrame = frames.find(f => f.id === id) || null;
+  selectedTire = null;
+  renderFrame();
+  renderTires();
+  renderSummary();
+  renderCompatibility();
 }
-function resetBuild(){
- ids.forEach(id=>document.getElementById(id).selectedIndex=0);
- update();
+
+function renderFrame() {
+  const el = document.getElementById("frameInfo");
+  if (!selectedFrame) {
+    el.innerHTML = "<p>No frame selected.</p>";
+    return;
+  }
+  el.innerHTML = `
+    <div class="product">
+      <strong>${selectedFrame.name}</strong>
+      <div class="price">${money(selectedFrame.price,
+        selectedFrame.currency)}</div>
+      <p>${selectedFrame.notes}</p>
+      <p class="small">
+        Wheel: ${selectedFrame.wheel} mm ·
+        Max tire: ${selectedFrame.maxTire} mm ·
+        BB: ${selectedFrame.bottomBracket}
+      </p>
+      <a href="${selectedFrame.url}" target="_blank"
+         rel="noopener">View product</a>
+    </div>`;
 }
-update();
+
+function renderTires() {
+  const list = document.getElementById("tireList");
+  const info = document.getElementById("tireInfo");
+  list.innerHTML = "";
+
+  if (!selectedFrame) {
+    info.textContent = "Choose a frame first.";
+    return;
+  }
+
+  const compatible = tires.filter(t =>
+    t.wheel === selectedFrame.wheel &&
+    t.width <= selectedFrame.maxTire
+  );
+
+  info.textContent =
+    `Showing ${compatible.length} tires that pass the current basic filter.`;
+
+  compatible.forEach(tire => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `
+      <strong>${tire.name}</strong>
+      <div class="price">${money(tire.price)}</div>
+      <p class="small">
+        ${tire.width} mm · ETRTO ${tire.width}-${tire.wheel}
+        · ${tire.shop}
+      </p>
+      <button onclick="selectTire('${tire.id}')">
+        ${selectedTire?.id === tire.id ? "Selected" : "Choose tire"}
+      </button>
+      <p><a href="${tire.url}" target="_blank"
+        rel="noopener">View at retailer</a></p>`;
+    list.appendChild(div);
+  });
+
+  if (!compatible.length) {
+    list.textContent = "No verified compatible tires in the database.";
+  }
+}
+
+function selectTire(id) {
+  selectedTire = tires.find(t => t.id === id) || null;
+  renderTires();
+  renderSummary();
+  renderCompatibility();
+}
+
+function renderSummary() {
+  const summary = document.getElementById("buildSummary");
+  const total = document.getElementById("total");
+  let html = "";
+  let sekTotal = 0;
+
+  if (selectedFrame) {
+    html += `<p>${selectedFrame.name} — ${money(
+      selectedFrame.price,selectedFrame.currency)}</p>`;
+  }
+  if (selectedTire) {
+    html += `<p>${selectedTire.name} — ${money(selectedTire.price)}</p>`;
+    sekTotal += selectedTire.price;
+  }
+
+  // Different currencies are not added together.
+  if (!selectedFrame && !selectedTire) {
+    html = "No parts selected yet.";
+  }
+  summary.innerHTML = html;
+
+  total.textContent = selectedFrame && selectedFrame.currency === "USD"
+    ? `${money(selectedFrame.price,"USD")} + ${money(sekTotal)}`
+    : money(sekTotal);
+}
+
+function renderCompatibility() {
+  const el = document.getElementById("compatibility");
+  if (!selectedFrame) {
+    el.innerHTML = "<p>Select a frame first.</p>";
+    return;
+  }
+
+  let html = `<p class="good">✓ Frame selected</p>
+    <p>Wheel diameter: ${selectedFrame.wheel} mm</p>
+    <p>Maximum tire width: ${selectedFrame.maxTire} mm</p>`;
+
+  if (selectedTire) {
+    const pass =
+      selectedTire.wheel === selectedFrame.wheel &&
+      selectedTire.width <= selectedFrame.maxTire;
+    html += pass
+      ? `<p class="good">✓ Tire passes basic frame filter</p>`
+      : `<p class="warning">! Tire does not pass basic filter</p>`;
+  } else {
+    html += "<p>Choose a tire to check it.</p>";
+  }
+  el.innerHTML = html;
+}
+
+function addCustom() {
+  const name = document.getElementById("customName").value.trim();
+  const category = document.getElementById("customCategory").value;
+  const price = Number(document.getElementById("customPrice").value);
+  const url = document.getElementById("customUrl").value.trim();
+
+  if (!name || !Number.isFinite(price) || price < 0) {
+    alert("Enter a product name and valid price.");
+    return;
+  }
+
+  customProducts.push({name,category,price,url});
+  renderCustom();
+  document.getElementById("customName").value = "";
+  document.getElementById("customPrice").value = "";
+  document.getElementById("customUrl").value = "";
+}
+
+function renderCustom() {
+  const el = document.getElementById("customList");
+  el.innerHTML = "<h3>Your added products</h3>";
+  customProducts.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product";
+    const name = document.createElement("strong");
+    name.textContent = p.name;
+    const price = document.createElement("p");
+    price.textContent = money(p.price);
+    div.append(name,price);
+    if (p.url) {
+      const link = document.createElement("a");
+      link.href = p.url;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "View product";
+      div.append(link);
+    }
+    el.appendChild(div);
+  });
+}
+
+function resetBuild() {
+  selectedFrame = null;
+  selectedTire = null;
+  document.getElementById("frameSelect").value = "";
+  renderFrame();
+  renderTires();
+  renderSummary();
+  renderCompatibility();
+}
+
+init();
 </script>
 </body>
 </html>
-
